@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface WeatherForecastService {
-    List<WeatherForecastValue> getAllForecasts();
+
 
     WeatherForecastValue getForecastForDate(LocalDate date);
 }

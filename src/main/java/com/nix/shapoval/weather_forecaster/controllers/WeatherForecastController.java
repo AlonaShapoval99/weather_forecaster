@@ -15,11 +15,6 @@ public class WeatherForecastController {
     @Resource
     WeatherForecastService weatherForecastService;
 
-    @CrossOrigin
-    @GetMapping("/findAll")
-    public List<WeatherForecastValue> findAll() {
-        return weatherForecastService.getAllForecasts();
-    }
 
     @CrossOrigin
     @GetMapping("/byDate")

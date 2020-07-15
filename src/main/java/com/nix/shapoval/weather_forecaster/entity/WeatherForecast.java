@@ -2,14 +2,17 @@ package com.nix.shapoval.weather_forecaster.entity;
 
 import com.nix.shapoval.weather_forecaster.model.WeatherForecastValue;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
+import org.springframework.data.domain.Persistable;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Document(collection = "WeatherForecast")
-public class WeatherForecast {
+public class WeatherForecast implements Persistable<UUID> {
     @Id
-    private Long id;
+    private UUID  id;
     private LocalDate date;
     private Double temperatureValue;
 
@@ -19,11 +22,25 @@ public class WeatherForecast {
         this.temperatureValue = weatherForecastValue.getTemperatureValue();
     }
 
-    public Long getId() {
+    public WeatherForecast(Double temperatureValue) {
+        this.temperatureValue = temperatureValue;
+        this.date = LocalDate.now();
+    }
+
+    public WeatherForecast(UUID  id, Double temperatureValue) {
+        this.id = id;
+        this.date = LocalDate.now();
+        this.temperatureValue = temperatureValue;
+    }
+
+    public WeatherForecast() {
+    }
+
+    public UUID  getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID  id) {
         this.id = id;
     }
 
@@ -41,5 +58,10 @@ public class WeatherForecast {
 
     public void setTemperatureValue(Double temperatureValue) {
         this.temperatureValue = temperatureValue;
+    }
+
+    @Override
+    public boolean isNew() {
+        return (getId() == null);
     }
 }

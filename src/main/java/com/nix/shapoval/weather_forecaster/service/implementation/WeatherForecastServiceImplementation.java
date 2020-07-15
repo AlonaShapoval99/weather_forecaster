@@ -10,28 +10,28 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class WeatherForecastServiceImplementation implements WeatherForecastService {
     @Autowired
     private WeatherForecastRepository weatherForecastRepository;
-    OpenWeatherIntegration openWeatherIntegration;
-    @Override
-    public List<WeatherForecastValue> getAllForecasts() {
-        List<WeatherForecast> weatherForecasts = weatherForecastRepository.findAll();
-        return weatherForecasts.stream()
-                .map(WeatherForecastValue::new)
-                .collect(Collectors.toList());
-    }
+    OpenWeatherIntegration openWeatherIntegration  = new OpenWeatherIntegration();
+
 
     @Override
     public WeatherForecastValue getForecastForDate(LocalDate date) {
-
+        double temperature = openWeatherIntegration.fetch("Kharkov");
         openWeatherIntegration = new OpenWeatherIntegration();
-        WeatherForecast weatherForecast = weatherForecastRepository.findByDate(date);
+        WeatherForecast weatherForecast = weatherForecastRepository.findByDate(date) == null ?
+                weatherForecastRepository.save(new WeatherForecast(
+                        UUID.randomUUID(),temperature))
+                : weatherForecastRepository.findByDate(date);
         return new WeatherForecastValue(weatherForecast);
     }
+
+
 
 
 }
